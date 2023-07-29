@@ -1,4 +1,4 @@
-# STOCK-VIZ: Interactive Stock Price Chart Application
+# STOCK-VIZ
 
 ## Overview
 
