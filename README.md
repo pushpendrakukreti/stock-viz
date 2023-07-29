@@ -1,4 +1,4 @@
-# STOCK-VIZ
+# STOCK-VIZ (https://stock-viz.netlify.app/)
 
 ## Overview
 
