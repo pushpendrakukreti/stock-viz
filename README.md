@@ -1,4 +1,4 @@
-# STOCK-VIZ: Interactive Stock Price Chart Application
+# STOCK-VIZ (https://stock-viz.netlify.app/)
 
 ## Overview
 
