@@ -12,33 +12,39 @@ import InteractiveChart from './InteractiveChart';
 
 const StockSelector = () => {
     const [stocks, setStocks] = useState([]);
-    const [selectedStock, setSelectedStock] = useState('');
+    const [selectedStocks, setSelectedStocks] = useState([]);
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
         fetchStocks();
     }, []);
 
-    // Fetch stock symbols from the API
     const fetchStocks = async () => {
         try {
             const response = await axios.get('https://finnhub.io/api/v1/stock/symbol', {
                 params: {
-                    exchange: 'US', // Fetch symbols for the US Stock Exchange
+                    exchange: 'US',
                     token: 'civgs1pr01qu45tmh950civgs1pr01qu45tmh95g',
                 },
             });
 
-            const ffData = response.data.filter((elem) => elem.displaySymbol == "AAPL");
+            const ffData = response.data.filter((elem) => elem.displaySymbol === "AAPL");
             const fData = response.data.slice(0, 9);
-            setStocks([...ffData, ...fData]);
+            setTimeout(() => {
+                setStocks([...ffData, ...fData]);
+            }, 2000);
         } catch (error) {
             console.error('Error fetching stock symbols:', error);
         }
     };
 
     const handleStockSelection = (event) => {
-        setSelectedStock(event.target.value);
+        const selectedOptions = event.target.value;
+        if (selectedOptions.length > 3) {
+            setSelectedStocks(selectedOptions.slice(0, 3));
+        } else {
+            setSelectedStocks(selectedOptions);
+        }
     };
 
     return (
@@ -48,16 +54,16 @@ const StockSelector = () => {
             style={{ marginTop: "1%" }}
             sx={{
                 padding: '2%',
-                // borderRadius: '10pt'
-            }}>
-            {/* <Typography variant="h4">Select a Stock</Typography> */}
+            }}
+        >
             <FormControl sx={{ minWidth: 200 }}>
                 <InputLabel className='stock-selector-label'>
-                    Select a Stock
+                    Select Stocks (Max 3)
                 </InputLabel>
                 <Select
                     className='stock-selector-dropdown'
-                    value={selectedStock}
+                    multiple
+                    value={selectedStocks}
                     onChange={handleStockSelection}
                 >
                     {stocks.map((stock) => (
@@ -67,7 +73,13 @@ const StockSelector = () => {
                     ))}
                 </Select>
             </FormControl>
-            {selectedStock && <InteractiveChart selectedStock={selectedStock} />}
+            {selectedStocks.length > 0 ? (
+                <InteractiveChart selectedStocks={selectedStocks} />
+            ) : (
+                <Typography variant="h6" sx={{ mt: 4, fontWeight: 'bold', backdropFilter: 'blur(3px)' }}>
+                    Select up to 3 stocks from the dropdown to view the chart.
+                </Typography>
+            )}
         </Container>
     );
 };

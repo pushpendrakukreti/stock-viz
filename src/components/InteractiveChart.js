@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import {
     LineChart,
     Line,
@@ -8,7 +7,6 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend,
     ResponsiveContainer,
 } from 'recharts';
 import {
@@ -28,46 +26,52 @@ import {
     Typography,
 } from '@mui/material';
 
-const InteractiveChart = ({ selectedStock }) => {
-    const [priceType, setPriceType] = useState('c'); // 'c' for close prices by default
+const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff0000', '#00ff00', '#0000ff']; // Define custom colors for the lines
+
+const InteractiveChart = ({ selectedStocks }) => {
+    const [priceType, setPriceType] = useState('c');
     const [chartData, setChartData] = useState([]);
     const [fromDate, setFromDate] = useState('2023-01-01');
     const [toDate, setToDate] = useState('2023-01-31');
-    const [showNoDataMessage, setShowNoDataMessage] = useState(false); // State to control the popup message
+    const [showNoDataMessage, setShowNoDataMessage] = useState(false);
 
     useEffect(() => {
         fetchData();
-    }, [selectedStock, priceType, fromDate, toDate]);
+    }, [selectedStocks, priceType, fromDate, toDate]);
 
     const fetchData = async () => {
         try {
-            // Fetch data for the selected stock
-            const response = await axios.get('https://finnhub.io/api/v1/stock/candle', {
-                params: {
-                    symbol: selectedStock,
-                    resolution: 'D', // Daily resolution
-                    from: Math.floor(new Date(fromDate).getTime() / 1000),
-                    to: Math.floor(new Date(toDate).getTime() / 1000),
-                    token: "civgs1pr01qu45tmh950civgs1pr01qu45tmh95g",
-                },
+            const promises = selectedStocks.map(async (selectedStock) => {
+                const response = await axios.get('https://finnhub.io/api/v1/stock/candle', {
+                    params: {
+                        symbol: selectedStock,
+                        resolution: 'D',
+                        from: Math.floor(new Date(fromDate).getTime() / 1000),
+                        to: Math.floor(new Date(toDate).getTime() / 1000),
+                        token: "civgs1pr01qu45tmh950civgs1pr01qu45tmh95g",
+                    },
+                });
+
+                return parseChartData(response.data, selectedStock);
             });
 
-            const data = await parseChartData(response.data);
+            const data = await Promise.all(promises);
 
-            if (data.length === 0) {
-                // Show popup message if there is no data available for the selected date range
+            const mergedData = data.flat();
+            
+            if (mergedData.length === 0) {
                 setShowNoDataMessage(true);
                 setChartData([]);
             } else {
                 setShowNoDataMessage(false);
-                setChartData(data);
+                setChartData(mergedData);
             }
         } catch (error) {
             console.error('Error fetching stock prices:', error);
         }
     };
 
-    const parseChartData = (data) => {
+    const parseChartData = (data, selectedStock) => {
         if (!data.c) {
             return [];
         }
@@ -75,13 +79,15 @@ const InteractiveChart = ({ selectedStock }) => {
         const parsedData = [];
 
         for (let i = 0; i < data.t.length; i++) {
-            const date = new Date(data.t[i] * 1000); // Convert Unix timestamp to JavaScript Date object
+            const date = new Date(data.t[i] * 1000);
+            const price = priceType === 'o' ? data.o[i]
+                : priceType === 'h' ? data.h[i]
+                : priceType === 'l' ? data.l[i]
+                : data.c[i];
+
             parsedData.push({
                 date,
-                open: data.o[i],
-                high: data.h[i],
-                low: data.l[i],
-                close: data.c[i],
+                [selectedStock]: price,
             });
         }
 
@@ -137,33 +143,39 @@ const InteractiveChart = ({ selectedStock }) => {
                 </div>
             </Paper>
             {chartData.length > 0 ? (
-                <>
-                    <ResponsiveContainer width="100%" height={400}>
-                        <LineChart data={chartData} className='main-chart' style={{ background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 4% 1% 0%', marginLeft: '3%', borderRadius: '5px' }}>
-                            <Line type="monotone" dataKey="open" stroke="#8884d8" />
-                            <Line type="monotone" dataKey="high" stroke="#82ca9d" />
-                            <Line type="monotone" dataKey="low" stroke="#ffc658" />
-                            <Line type="monotone" dataKey="close" stroke="#ff0000" />
-                            <CartesianGrid stroke="#ccc" />
-                            <XAxis dataKey="date" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </>
+                <ResponsiveContainer width="100%" height={400}>
+                    <LineChart data={chartData} className='main-chart' style={{ background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 4% 1% 0%', marginLeft: '3%', borderRadius: '5px' }}>
+                        <CartesianGrid stroke="#ccc" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip
+                            labelFormatter={(value) => {
+                                const date = new Date(value);
+                                return `${date.toLocaleDateString()} --- ${date.toLocaleTimeString()}`;
+                            }}
+                            formatter={(value, name) => [`${value}`, `Stock: ${name}`]}
+                        />
+                        {selectedStocks.map((selectedStock, index) => (
+                            <Line
+                                key={selectedStock}
+                                type="monotone"
+                                dataKey={selectedStock}
+                                stroke={colors[index % colors.length]}
+                            />
+                        ))}
+                    </LineChart>
+                </ResponsiveContainer>
             ) : (
                 <Typography variant="h6" sx={{ mt: 4, fontWeight: 'bold', backdropFilter: 'blur(3px)' }}>
-                    No Data Available for the Selected Date Range and Stock
+                    No Data Available for the Selected Date Range and Stocks
                 </Typography>
             )}
 
-            {/* Popup message for no data */}
             <Dialog open={showNoDataMessage} onClose={handleClosePopup}>
                 <DialogTitle>No Data Available</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        There is no data available for the selected date range and stock.
+                        There is no data available for the selected date range and stocks.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
