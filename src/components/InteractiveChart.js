@@ -52,14 +52,18 @@ const InteractiveChart = ({ selectedStocks }) => {
                         token: "civgs1pr01qu45tmh950civgs1pr01qu45tmh95g",
                     },
                 });
-
-                return parseChartData(response.data, selectedStock);
+                if (response.data.s === "ok") {
+                    return parseChartData(response.data, selectedStock);
+                }
+                else {
+                    setShowNoDataMessage(true)
+                }
             });
 
             const data = await Promise.all(promises);
 
             const mergedData = mergeChartData(data);
-            
+
             if (mergedData.length === 0) {
                 setShowNoDataMessage(true);
                 setChartData([]);
@@ -83,8 +87,8 @@ const InteractiveChart = ({ selectedStocks }) => {
             const date = new Date(data.t[i] * 1000);
             const price = priceType === 'o' ? data.o[i]
                 : priceType === 'h' ? data.h[i]
-                : priceType === 'l' ? data.l[i]
-                : data.c[i];
+                    : priceType === 'l' ? data.l[i]
+                        : data.c[i];
 
             parsedData.push({
                 date,

@@ -28,10 +28,17 @@ const StockSelector = () => {
                 },
             });
 
-            const ffData = response.data.filter((elem) => elem.displaySymbol === "AAPL");
-            const fData = response.data.slice(0, 9);
+            let unique_values = response.data
+                .map((item) => item.type)
+                .filter(
+                    (value, index, current_value) => current_value.indexOf(value) === index
+                );
+            console.log(unique_values);
+            const ffData = response.data.filter((elem) => elem.type === "NY Reg Shrs");
+            const fData = ffData.slice(0, 9);
+            console.log(fData);
             setTimeout(() => {
-                setStocks([...ffData, ...fData]);
+                setStocks(fData);
             }, 1000);
         } catch (error) {
             console.error('Error fetching stock symbols:', error);

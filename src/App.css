@@ -104,20 +104,31 @@
 }
 
 .recharts-default-tooltip{
-  border: 2px solid rgba(260, 200, 252, 0.5) !important;
-  background: rgba(255, 255, 255, 0.5) !important;
-  backdrop-filter: blur(3px) !important;
+  border: 2px solid linear-gradient(135deg, rgba(189, 212, 231, 0.5), rgba(134, 147, 171, 0.6)) !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
   border-radius: 5px;
   font-size: large;
   font-weight: bold;
-  margin-top: -10vh !important;
+  margin-top: 10vh !important;
+  margin-left: 5vw !important;
 }
 
 .recharts-tooltip-label {
-  color: darkblue;
+  background-color: darkcyan;
+  color: white;
+  padding: 2%;
+  width: 10vw;
 }
 
 .recharts-default-legend{
   font-size: larger;
   margin-top: -1% !important;
+}
+
+
+.MuiPaper-root{
+  margin-top: 1vh;
+  overflow-y: auto;
+  max-height: 50vh !important;
 }
