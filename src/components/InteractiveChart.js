@@ -8,6 +8,7 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
+    Legend,
 } from 'recharts';
 import {
     Button,
@@ -57,7 +58,7 @@ const InteractiveChart = ({ selectedStocks }) => {
 
             const data = await Promise.all(promises);
 
-            const mergedData = data.flat();
+            const mergedData = mergeChartData(data);
             
             if (mergedData.length === 0) {
                 setShowNoDataMessage(true);
@@ -92,6 +93,37 @@ const InteractiveChart = ({ selectedStocks }) => {
         }
 
         return parsedData;
+    };
+
+    const mergeChartData = (data) => {
+        if (data.length === 0) {
+            return [];
+        }
+
+        const mergedData = [];
+
+        // Create a set of unique dates across all datasets
+        const dateSet = new Set();
+        data.forEach((dataset) => {
+            dataset.forEach((dataEntry) => {
+                dateSet.add(dataEntry.date.toISOString());
+            });
+        });
+
+        // Sort the dates in ascending order
+        const sortedDates = [...dateSet].sort();
+
+        // Create a new object for each date with the corresponding values from each dataset
+        sortedDates.forEach((date) => {
+            const dateObj = { date: new Date(date) };
+            data.forEach((dataset) => {
+                const entry = dataset.find((dataEntry) => dataEntry.date.toISOString() === date);
+                dateObj[entry ? Object.keys(entry)[1] : selectedStocks[0]] = entry ? entry[Object.keys(entry)[1]] : null;
+            });
+            mergedData.push(dateObj);
+        });
+
+        return mergedData;
     };
 
     const handlePriceTypeChange = (event) => {
@@ -137,34 +169,38 @@ const InteractiveChart = ({ selectedStocks }) => {
                         sx={{ mx: 2 }}
                         style={{ background: 'rgba(255,255,255)' }}
                     />
-                    <Button variant="contained" onClick={handleFetchData} sx={{ ml: 2 }} style={{ padding: '1.1em' }}>
-                        Fetch Data
-                    </Button>
                 </div>
             </Paper>
             {chartData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={400}>
-                    <LineChart data={chartData} className='main-chart' style={{ background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 4% 1% 0%', marginLeft: '3%', borderRadius: '5px' }}>
-                        <CartesianGrid stroke="#ccc" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Tooltip
-                            labelFormatter={(value) => {
-                                const date = new Date(value);
-                                return `${date.toLocaleDateString()} --- ${date.toLocaleTimeString()}`;
-                            }}
-                            formatter={(value, name) => [`${value}`, `Stock: ${name}`]}
-                        />
-                        {selectedStocks.map((selectedStock, index) => (
-                            <Line
-                                key={selectedStock}
-                                type="monotone"
-                                dataKey={selectedStock}
-                                stroke={colors[index % colors.length]}
+                <>
+                    <ResponsiveContainer width="100%" height={400}>
+                        <LineChart data={chartData} className='main-chart' style={{ background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 4% 1% 0%', marginLeft: '3%', borderRadius: '5px' }}>
+                            <CartesianGrid stroke="#ccc" />
+                            <XAxis dataKey="date" />
+                            <YAxis domain={[-10, 'auto']} />
+                            {selectedStocks.map((selectedStock, index) => (
+                                <Line
+                                    key={selectedStock}
+                                    type="monotone"
+                                    dataKey={selectedStock}
+                                    stroke={colors[index % colors.length]}
+                                    strokeWidth={3}
+                                />
+                            ))}
+                            <Tooltip
+                                labelFormatter={(value) => {
+                                    const date = new Date(value);
+                                    return `${date.toDateString()}`;
+                                }}
+                                formatter={(value, name) => [`${value}`, `${name}`]}
                             />
-                        ))}
-                    </LineChart>
-                </ResponsiveContainer>
+                            <Legend
+                                verticalAlign="bottom"
+                                height={36}
+                            />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </>
             ) : (
                 <Typography variant="h6" sx={{ mt: 4, fontWeight: 'bold', backdropFilter: 'blur(3px)' }}>
                     No Data Available for the Selected Date Range and Stocks

@@ -32,7 +32,7 @@ const StockSelector = () => {
             const fData = response.data.slice(0, 9);
             setTimeout(() => {
                 setStocks([...ffData, ...fData]);
-            }, 2000);
+            }, 1000);
         } catch (error) {
             console.error('Error fetching stock symbols:', error);
         }

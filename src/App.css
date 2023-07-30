@@ -99,6 +99,25 @@
   margin-bottom: 16px;
 }
 
-.main-chart:hover{
+.main-chart:hover {
   cursor: pointer !important;
+}
+
+.recharts-default-tooltip{
+  border: 2px solid rgba(260, 200, 252, 0.5) !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(3px) !important;
+  border-radius: 5px;
+  font-size: large;
+  font-weight: bold;
+  margin-top: -10vh !important;
+}
+
+.recharts-tooltip-label {
+  color: darkblue;
+}
+
+.recharts-default-legend{
+  font-size: larger;
+  margin-top: -1% !important;
 }
