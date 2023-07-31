@@ -110,7 +110,7 @@
   border-radius: 5px;
   font-size: large;
   font-weight: bold;
-  margin-top: 10vh !important;
+  margin-top: -10vh !important;
   margin-left: 5vw !important;
 }
 
@@ -131,4 +131,33 @@
   margin-top: 1vh;
   overflow-y: auto;
   max-height: 50vh !important;
+}
+
+
+.css-1h51icj-MuiAutocomplete-root .MuiAutocomplete-tag{
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 85% !important;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon.css-1h51icj-MuiAutocomplete-root .MuiOutlinedInput-root{
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root{
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+  padding: 0% 1% !important;
+  margin: 0% -0.5% !important;
+  font-size: medium !important;
+  border-radius: 5px;
+}
+
+.MuiAutocomplete-hasPopupIcon.css-1h51icj-MuiAutocomplete-root .MuiOutlinedInput-root, .MuiAutocomplete-hasClearIcon.css-1h51icj-MuiAutocomplete-root .MuiOutlinedInput-root{
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+}
+
+.css-ptiqhd-MuiSvgIcon-root{
+  height: 3vh !important;
+  width: 3vh !important;
 }

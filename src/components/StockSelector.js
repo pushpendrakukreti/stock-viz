@@ -2,18 +2,24 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
     Container,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
     Typography,
+    Autocomplete,
+    TextField,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Button,
 } from '@mui/material';
 import InteractiveChart from './InteractiveChart';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const StockSelector = () => {
     const [stocks, setStocks] = useState([]);
     const [selectedStocks, setSelectedStocks] = useState([]);
-    const [chartData, setChartData] = useState([]);
+    const [selectedStock, setSelectedStock] = useState([]);
+    const [showPopup, setShowPopup] = useState(false);
 
     useEffect(() => {
         fetchStocks();
@@ -33,10 +39,10 @@ const StockSelector = () => {
                 .filter(
                     (value, index, current_value) => current_value.indexOf(value) === index
                 );
-            console.log(unique_values);
+
             const ffData = response.data.filter((elem) => elem.type === "NY Reg Shrs");
             const fData = ffData.slice(0, 9);
-            console.log(fData);
+
             setTimeout(() => {
                 setStocks(fData);
             }, 1000);
@@ -45,12 +51,31 @@ const StockSelector = () => {
         }
     };
 
-    const handleStockSelection = (event) => {
-        const selectedOptions = event.target.value;
-        if (selectedOptions.length > 3) {
-            setSelectedStocks(selectedOptions.slice(0, 3));
+    const handleStockSelection = (event, value) => {
+        if (value.length <= 3) {
+            let selectedStocks = value.slice(0, 3); // Limit the selected stocks to a maximum of 3
+            let selectedSymbols = selectedStocks.map((stock) => stock.displaySymbol);
+            setSelectedStocks(selectedStocks);
+            setSelectedStock(selectedSymbols);
+            setShowPopup(false); // Hide the popup if the selection is valid
         } else {
-            setSelectedStocks(selectedOptions);
+            setShowPopup(true); // Show the popup if more than 3 stocks are selected
+        }
+    };
+
+    const handleClearSelection = () => {
+        setSelectedStocks([]);
+    };
+
+    const getDropdownLabel = () => {
+        if (selectedStocks.length === 0) {
+            return 'Select Stocks (Max 3)';
+        } else if (selectedStocks.length === 1) {
+            return `${selectedStocks[0].symbol} - ${selectedStocks[0].description}`;
+        } else {
+            const firstStock = selectedStocks[0].symbol;
+            const otherStocksCount = selectedStocks.length - 1;
+            return `${firstStock} + ${otherStocksCount} others`;
         }
     };
 
@@ -63,30 +88,44 @@ const StockSelector = () => {
                 padding: '2%',
             }}
         >
-            <FormControl sx={{ minWidth: 200 }}>
-                <InputLabel className='stock-selector-label'>
-                    Select Stocks (Max 3)
-                </InputLabel>
-                <Select
-                    className='stock-selector-dropdown'
-                    multiple
-                    value={selectedStocks}
-                    onChange={handleStockSelection}
-                >
-                    {stocks.map((stock) => (
-                        <MenuItem key={stock.symbol} value={stock.symbol}>
-                            {stock.symbol} - {stock.description}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            {selectedStocks.length > 0 ? (
-                <InteractiveChart selectedStocks={selectedStocks} />
+            <Autocomplete
+                multiple
+                id="stock-selector-dropdown"
+                value={selectedStocks}
+                onChange={handleStockSelection}
+                options={stocks}
+                getOptionLabel={(option) => option.symbol + ' - ' + option.description}
+                filterSelectedOptions
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        label={getDropdownLabel()}
+                    />
+                )}
+            />
+            {selectedStock.length > 0 ? (
+                <InteractiveChart selectedStocks={selectedStock} />
             ) : (
                 <Typography variant="h6" sx={{ mt: 4, fontWeight: 'bold', backdropFilter: 'blur(3px)' }}>
                     Select up to 3 stocks from the dropdown to view the chart.
                 </Typography>
             )}
+
+            {/* Popup message for selecting more than 3 stocks */}
+            <Dialog open={showPopup} onClose={() => setShowPopup(false)}>
+                <DialogTitle>Maximum Selection Limit Reached</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        You can select up to 3 stocks from the dropdown.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowPopup(false)} autoFocus>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 };

@@ -178,7 +178,7 @@ const InteractiveChart = ({ selectedStocks }) => {
             {chartData.length > 0 ? (
                 <>
                     <ResponsiveContainer width="100%" height={400}>
-                        <LineChart data={chartData} className='main-chart' style={{ background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 4% 1% 0%', marginLeft: '3%', borderRadius: '5px' }}>
+                        <LineChart data={chartData} className='main-chart' style={{ width: '84vw', background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 1% 1% 0%', marginLeft: '-3%', borderRadius: '5px' }}>
                             <CartesianGrid stroke="#ccc" />
                             <XAxis dataKey="date" />
                             <YAxis domain={[-10, 'auto']} />
