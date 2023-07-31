@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Update the import
-import StockSelector from './components/StockSelector';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import StockSelector from './pages/StockSelector';
 import './App.css';
 
 function App() {
