@@ -1,4 +1,4 @@
-# STOCK-VIZ (https://stock-viz.netlify.app/)
+# STOCK-VIZ
 
 ## Overview
 
@@ -25,6 +25,7 @@ This is a single-page React.js application that enables users to select stocks f
 ## Technologies Used
 
 - JavaScript
+- Typescript
 - React.js
 - Material-UI for user interface components
 - Recharts for interactive data visualization
