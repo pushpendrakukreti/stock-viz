@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Typography } from '@mui/material';
 import useStockData from '../hooks/useStockData';
 import StockSelectorAutocomplete from '../components/StockSelectorAutocomplete';
-import InteractiveChart from './InteractiveChart';
+import InteractiveChart from '../components/InteractiveChart';
 import MaxSelectionPopup from '../components/MaxSelectionPopup';
 import axios from 'axios';
 
@@ -39,7 +39,6 @@ const StockSelector = () => {
 
         const validSelectedStocks = await Promise.all(promises);
 
-        // Filter out null values (i.e., stocks with no data)
         const filteredSelectedStocks = validSelectedStocks.filter((selectedSymbol) => selectedSymbol !== null);
 
         if (filteredSelectedStocks.length <= 3) {
