@@ -18,7 +18,7 @@ export interface ChartData {
 }
 
 export interface InteractiveChartProps {
-    selectedStocks: string[]; // Change to string[]
+    selectedStocks: string[];
     noData: boolean;
 }
 

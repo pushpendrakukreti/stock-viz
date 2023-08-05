@@ -1,6 +1,6 @@
 import React from 'react';
 import { Autocomplete, TextField } from '@mui/material';
-import { Stock } from '../types';
+import { Stock } from '../../types';
 
 interface StockSelectorAutocompleteProps {
   selectedStocks: Stock[];

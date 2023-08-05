@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Typography } from '@mui/material';
 import useStockData from '../hooks/useStockData';
-import StockSelectorAutocomplete from '../components/StockSelectorAutocomplete';
+import StockSelectorAutocomplete from '../components/StockSelectorAutoComplete';
 import InteractiveChart from '../components/InteractiveChart';
 import MaxSelectionPopup from '../components/MaxSelectionPopup';
 import { Stock } from '../types';
@@ -61,7 +61,6 @@ const StockSelector: React.FC = () => {
     setShowPopup(false);
   };
 
-  // Convert selectedStocks from Stock[] to string[] before passing to InteractiveChart
   const selectedStockSymbols = selectedStocks.map((stock) => stock.displaySymbol);
 
   return (

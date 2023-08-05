@@ -11,9 +11,9 @@ import {
   Typography,
   Paper,
 } from '@mui/material';
-import PriceTypeSelector from '../components/PriceTypeSelector';
-import DatePickers from '../components/DatePickers';
-import Chart from '../components/Chart';
+import PriceTypeSelector from './PriceTypeSelector';
+import DatePickers from './DatePickers';
+import Chart from './Chart';
 import { SelectChangeEvent } from '@mui/material';
 import { fetchData } from '../service/Api';
 import { ChartData, InteractiveChartProps } from '../types';

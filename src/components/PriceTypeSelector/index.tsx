@@ -1,6 +1,6 @@
 import React from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { PriceTypeSelectorProps } from '../types';
+import { PriceTypeSelectorProps } from '../../types';
 
 
 const PriceTypeSelector: React.FC<PriceTypeSelectorProps> = ({ priceType, handlePriceTypeChange }): JSX.Element => {
@@ -11,7 +11,7 @@ const PriceTypeSelector: React.FC<PriceTypeSelectorProps> = ({ priceType, handle
         label="Price Type"
         id="price-type-selector"
         value={priceType}
-        onChange={handlePriceTypeChange} // Update the event type
+        onChange={handlePriceTypeChange}
       >
         <MenuItem value="c">Closing Price</MenuItem>
         <MenuItem value="o">Opening Price</MenuItem>
