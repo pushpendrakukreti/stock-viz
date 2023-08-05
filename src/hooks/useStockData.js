@@ -14,9 +14,8 @@ const useStockData = () => {
           },
         });
 
-        // const ffData = response.data.filter((elem) => elem.type === "NY Reg Shrs");
-        const fData = response.data.slice(0, 9);
-        setStocks(fData);
+        const ffData = response.data.filter((elem) => elem.type === "NY Reg Shrs");
+        setStocks(ffData);
       } catch (error) {
         console.error('Error fetching stock symbols:', error);
       }

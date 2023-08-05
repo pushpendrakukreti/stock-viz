@@ -16,7 +16,7 @@ import DatePickers from '../components/DatePickers';
 import Chart from '../components/Chart';
 import { fetchData } from '../service/Api';
 
-const InteractiveChart = ({ selectedStocks }) => {
+const InteractiveChart = ({ selectedStocks, noData }) => {
   const [priceType, setPriceType] = useState('c');
   const [chartData, setChartData] = useState([]);
   const [fromDate, setFromDate] = useState('2023-01-01');
@@ -25,10 +25,13 @@ const InteractiveChart = ({ selectedStocks }) => {
 
   useEffect(() => {
     fetchData(selectedStocks, fromDate, toDate, priceType)
-    .then((mergedData) => {
-      if (mergedData.length === 0) {
+      .then((mergedData) => {
+        if (mergedData.length === 0) {
           setShowNoDataMessage(true);
           setChartData([]);
+        } else if (noData) {
+          setShowNoDataMessage(true);
+          setChartData(mergedData);
         } else {
           setShowNoDataMessage(false);
           setChartData(mergedData);

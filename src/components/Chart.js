@@ -20,19 +20,17 @@ function formatDateToMMDDYY(date) {
 }
 
 const Chart = ({ chartData, selectedStocks }) => {
-  const tickInterval = Math.ceil(chartData.length / 5);
-  const minDate = chartData[0].date;
-  const maxDate = chartData[chartData.length - 1].date;
+  const tickInterval = Math.floor((chartData.length - 1) / 7);
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer height={400}>
       <LineChart
         data={chartData}
         className='main-chart'
-        style={{ width: '84vw', background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 1% 1% 0%', marginLeft: '-3%', borderRadius: '5px' }}
+        style={{ width: 'inherit', background: 'rgb(255,255,255)', zoom: 0.9, padding: '2% 4% 1% 0%', borderRadius: '5px', marginLeft: '-2%' }}
       >
         <CartesianGrid stroke="#ccc" />
-        <XAxis dataKey="date" tickFormatter={formatDateToMMDDYY} interval={tickInterval} domain={[minDate, maxDate]} />
+        <XAxis dataKey="date" tickFormatter={formatDateToMMDDYY} interval={tickInterval} />
         <YAxis />
         {selectedStocks.map((selectedStock, index) => (
           <Line

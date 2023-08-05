@@ -10,7 +10,7 @@ const StockSelector = () => {
     const [selectedStocks, setSelectedStocks] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [selectedStock, setSelectedStock] = useState([]);
-
+    const [noData, setNoData] = useState(false);
     const stocks = useStockData();
 
     const handleStockSelection = async (event, value) => {
@@ -42,9 +42,15 @@ const StockSelector = () => {
         const filteredSelectedStocks = validSelectedStocks.filter((selectedSymbol) => selectedSymbol !== null);
 
         if (filteredSelectedStocks.length <= 3) {
-            setSelectedStocks(value);
+            const updatedStocks = value.filter(item => filteredSelectedStocks.includes(item.displaySymbol));
+            setSelectedStocks(updatedStocks);
             setSelectedStock(filteredSelectedStocks);
             setShowPopup(false);
+            if (value.length !== filteredSelectedStocks.length) {
+                setNoData(true);
+            } else {
+                setNoData(false);
+            }
         } else {
             setShowPopup(true);
         }
@@ -72,7 +78,7 @@ const StockSelector = () => {
 
             {/* Chart component */}
             {selectedStocks.length > 0 ? (
-                <InteractiveChart selectedStocks={selectedStock} />
+                <InteractiveChart selectedStocks={selectedStock} noData={noData} />
             ) : (
                 <Typography variant="h6" sx={{ mt: 4, fontWeight: 'bold', backdropFilter: 'blur(3px)' }}>
                     Select up to 3 stocks from the dropdown to view the chart.
