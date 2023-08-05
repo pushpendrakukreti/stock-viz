@@ -1,7 +1,12 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 
-const MaxSelectionPopup = ({ showPopup, handleClosePopup }) => {
+interface MaxSelectionPopupProps {
+  showPopup: boolean;
+  handleClosePopup: () => void;
+}
+
+const MaxSelectionPopup: React.FC<MaxSelectionPopupProps> = ({ showPopup, handleClosePopup }): JSX.Element => {
   return (
     <Dialog open={showPopup} onClose={handleClosePopup}>
       <DialogTitle>Maximum Selection Limit Reached</DialogTitle>

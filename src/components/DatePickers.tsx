@@ -1,7 +1,19 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 
-const DatePickers = ({ fromDate, toDate, setFromDate, setToDate }) => {
+interface DatePickersProps {
+  fromDate: string;
+  toDate: string;
+  setFromDate: React.Dispatch<React.SetStateAction<string>>;
+  setToDate: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const DatePickers: React.FC<DatePickersProps> = ({
+  fromDate,
+  toDate,
+  setFromDate,
+  setToDate,
+}): JSX.Element => {
   return (
     <>
       <TextField

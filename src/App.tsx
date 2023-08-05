@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import StockSelector from './pages/StockSelector';
 import './App.css';
 
-function App() {
+function App(): JSX.Element {
   return (
     <div className="App">
       <Router>

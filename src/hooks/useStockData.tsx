@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useStockData = () => {
-  const [stocks, setStocks] = useState([]);
+interface Stock {
+  description: string;
+  displaySymbol: string;
+  symbol: string;
+  type: string;
+}
+
+const useStockData = (): Stock[] => {
+  const [stocks, setStocks] = useState<Stock[]>([]);
 
   useEffect(() => {
     const fetchStocks = async () => {
@@ -14,7 +21,7 @@ const useStockData = () => {
           },
         });
 
-        const ffData = response.data.filter((elem) => elem.type === "NY Reg Shrs");
+        const ffData = response.data.filter((elem: Stock) => elem.type === 'NY Reg Shrs');
         setStocks(ffData);
       } catch (error) {
         console.error('Error fetching stock symbols:', error);

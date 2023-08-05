@@ -1,8 +1,19 @@
 import React from 'react';
 import { Autocomplete, TextField } from '@mui/material';
+import { Stock } from '../types';
 
-const StockSelectorAutocomplete = ({ selectedStocks, handleStockSelection, stocks }) => {
-  const getDropdownLabel = () => {
+interface StockSelectorAutocompleteProps {
+  selectedStocks: Stock[];
+  handleStockSelection: (event: React.ChangeEvent<{}>, value: Stock[]) => void;
+  stocks: Stock[];
+}
+
+const StockSelectorAutocomplete: React.FC<StockSelectorAutocompleteProps> = ({
+  selectedStocks,
+  handleStockSelection,
+  stocks,
+}): JSX.Element => {
+  const getDropdownLabel = (): string => {
     if (selectedStocks.length === 0) {
       return 'Select Stocks (Max 3)';
     } else if (selectedStocks.length === 1) {

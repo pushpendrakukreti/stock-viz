@@ -14,11 +14,13 @@ import {
 import PriceTypeSelector from '../components/PriceTypeSelector';
 import DatePickers from '../components/DatePickers';
 import Chart from '../components/Chart';
+import { SelectChangeEvent } from '@mui/material';
 import { fetchData } from '../service/Api';
+import { ChartData, InteractiveChartProps } from '../types';
 
-const InteractiveChart = ({ selectedStocks, noData }) => {
+const InteractiveChart: React.FC<InteractiveChartProps> = ({ selectedStocks, noData }) => {
   const [priceType, setPriceType] = useState('c');
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [fromDate, setFromDate] = useState('2023-01-01');
   const [toDate, setToDate] = useState('2023-01-31');
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
@@ -44,7 +46,7 @@ const InteractiveChart = ({ selectedStocks, noData }) => {
       });
   }, [selectedStocks, priceType, fromDate, toDate]);
 
-  const handlePriceTypeChange = (event) => {
+  const handlePriceTypeChange = (event: SelectChangeEvent<string>) => {
     setPriceType(event.target.value);
   };
 
